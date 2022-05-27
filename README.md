@@ -60,7 +60,9 @@ The documentation for python-keycloak is available on [readthedocs](http://pytho
 
 ## Usage
 
-### Well-known
+### Keycloak OpenID
+
+#### Well-known
 
 ```python
 from keycloak import KeycloakOpenID
@@ -77,7 +79,7 @@ keycloak_openid = KeycloakOpenID(
 config_well_known = keycloak_openid.well_known()
 ```
 
-### User authentication
+#### User authentication
 
 ```python
 # Get Token
@@ -85,14 +87,14 @@ token = keycloak_openid.token("user", "password")
 token = keycloak_openid.token("user", "password", totp="012345")
 ```
 
-### User info
+#### User info
 
 ```python
 # Get Userinfo
 userinfo = keycloak_openid.userinfo(token['access_token'])
 ```
 
-### Token refresh
+#### Token refresh
 
 ```python
 # Refresh token
@@ -102,14 +104,14 @@ token = keycloak_openid.refresh_token(token['refresh_token'])
 keycloak_openid.logout(token['refresh_token'])
 ```
 
-### Certificates
+#### Certificates
 
 ```python
 # Get Certs
 certs = keycloak_openid.certs()
 ```
 
-### RPT
+#### RPT
 
 ```python
 # Get RPT (Entitlement)
@@ -124,7 +126,7 @@ token_rpt_info = keycloak_openid.introspect(
 )
 ```
 
-### Token inspection
+#### Token inspection
 
 ```python
 # Introspect Token
@@ -140,7 +142,7 @@ token_info = keycloak_openid.decode_token(
 )
 ```
 
-### Permissions
+#### Permissions
 
 ```python
 # Get permissions by token
@@ -152,7 +154,11 @@ policies = keycloak_openid.get_policies(
 permissions = keycloak_openid.get_permissions(
     token["access_token"], method_token_info="introspect"
 )
+```
 
+#### UMA permissions
+
+```python
 # Get UMA-permissions by token
 token = keycloak_openid.token("user", "password")
 permissions = keycloak_openid.uma_permissions(token["access_token"])
@@ -164,10 +170,11 @@ permissions = keycloak_openid.uma_permissions(token["access_token"], permissions
 # Get auth status for a specific resource and scope by token
 token = keycloak_openid.token("user", "password")
 auth_status = keycloak_openid.has_uma_access(token["access_token"], "Resource#Scope")
+```
 
+### Keycloak Admin
 
-# KEYCLOAK ADMIN
-
+```python
 from keycloak import KeycloakAdmin
 
 keycloak_admin = KeycloakAdmin(
@@ -179,7 +186,11 @@ keycloak_admin = KeycloakAdmin(
     client_secret_key="client-secret",
     verify=True,
 )
+```
 
+#### User handling
+
+```python
 # Add user
 new_user = keycloak_admin.create_user(
     {
@@ -269,7 +280,11 @@ response = keycloak_admin.delete_user(user_id="user-id-keycloak")
 
 # Get consents granted by the user
 consents = keycloak_admin.consents_user(user_id="user-id-keycloak")
+```
 
+#### Sending emails
+
+```python
 # Send User Action
 response = keycloak_admin.send_update_account(
     user_id="user-id-keycloak", payload=json.dumps(["UPDATE_PASSWORD"])
@@ -277,13 +292,25 @@ response = keycloak_admin.send_update_account(
 
 # Send Verify Email
 response = keycloak_admin.send_verify_email(user_id="user-id-keycloak")
+```
 
+#### User sessions
+
+```python
 # Get sessions associated with the user
 sessions = keycloak_admin.get_sessions(user_id="user-id-keycloak")
+```
 
+#### Server info
+
+```python
 # Get themes, social providers, auth providers, and event listeners available on this server
 server_info = keycloak_admin.get_server_info()
+```
 
+#### Clients handling
+
+```python
 # Get clients belonging to the realm Returns a list of clients belonging to the realm
 clients = keycloak_admin.get_clients()
 
@@ -292,7 +319,11 @@ client_id = keycloak_admin.get_client_id("my-client")
 
 # Get representation of the client - id of client (not client-id)
 client = keycloak_admin.get_client(client_id="client_id")
+```
 
+#### Roles handling
+
+```python
 # Get all roles for the realm or client
 realm_roles = keycloak_admin.get_realm_roles()
 
@@ -332,7 +363,24 @@ keycloak_admin.delete_client_roles_of_user(
 keycloak_admin.delete_client_roles_of_user(
     client_id="client_id", user_id="user_id", roles=[{"id": "role-id_1"}, {"id": "role-id_2"}]
 )
+# Get client role id from name
+role_id = keycloak_admin.get_client_role_id(client_id=client_id, role_name="test")
 
+# Get all roles for the realm or client
+realm_roles = keycloak_admin.get_roles()
+
+# Assign client role to user. Note that BOTH role_name and role_id appear to be required.
+keycloak_admin.assign_client_role(
+    client_id=client_id, user_id=user_id, role_id=role_id, role_name="test"
+)
+
+# Assign realm roles to user
+keycloak_admin.assign_realm_roles(user_id=user_id, roles=realm_roles)
+```
+
+#### Authorization services
+
+```python
 # Get all client authorization resources
 client_resources = get_client_authz_resources(client_id="client_id")
 
@@ -344,7 +392,11 @@ client_permissions = get_client_authz_permissions(client_id="client_id")
 
 # Get all client authorization policies
 client_policies = get_client_authz_policies(client_id="client_id")
+```
 
+#### Groups handling
+
+```python
 # Create new group
 group = keycloak_admin.create_group({"name": "Example Group"})
 
@@ -359,25 +411,18 @@ group = keycloak_admin.get_group_by_path(path="/group/subgroup", search_in_subgr
 
 # Function to trigger user sync from provider
 sync_users(storage_id="storage_di", action="action")
+```
 
-# Get client role id from name
-role_id = keycloak_admin.get_client_role_id(client_id=client_id, role_name="test")
+#### Identity providers
 
-# Get all roles for the realm or client
-realm_roles = keycloak_admin.get_roles()
-
-# Assign client role to user. Note that BOTH role_name and role_id appear to be required.
-keycloak_admin.assign_client_role(
-    client_id=client_id, user_id=user_id, role_id=role_id, role_name="test"
-)
-
-# Assign realm roles to user
-keycloak_admin.assign_realm_roles(user_id=user_id, roles=realm_roles)
-
-
+```python
 # Get all ID Providers
 idps = keycloak_admin.get_idps()
+```
 
+#### Realm handling
+
+```python
 # Create a new Realm
 keycloak_admin.create_realm(payload={"realm": "demo"}, skip_exists=False)
 ```

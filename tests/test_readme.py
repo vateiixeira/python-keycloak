@@ -1,5 +1,3 @@
-import pytest
-
 from keycloak.keycloak_admin import KeycloakAdmin
 
 
@@ -16,7 +14,6 @@ def find_code_blocks(readme_text):
     return code_blocks
 
 
-# @pytest.mark.skip()
 def test_readme(admin: KeycloakAdmin):
     admin.create_realm(payload={"realm": "example_realm", "enabled": True})
     admin.realm_name = "example_realm"
