@@ -16,7 +16,7 @@ with open("docs-requirements.txt", "r") as fh:
     docs_reqs = fh.read().split("\n")
 
 
-VERSIONFILE = "src/keycloak/_version.py"
+VERSIONFILE = "src/pycloak/_version.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)

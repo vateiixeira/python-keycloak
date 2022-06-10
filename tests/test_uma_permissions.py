@@ -18,8 +18,8 @@ import re
 
 import pytest
 
-from keycloak.exceptions import KeycloakPermissionFormatError, PermissionDefinitionError
-from keycloak.uma_permissions import Resource, Scope, build_permission_param
+from pycloak.exceptions import KeycloakPermissionFormatError, PermissionDefinitionError
+from pycloak.uma_permissions import Resource, Scope, build_permission_param
 
 
 def test_resource_with_scope_obj():

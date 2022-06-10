@@ -3,7 +3,7 @@ import uuid
 
 import pytest
 
-from keycloak import KeycloakAdmin
+from pycloak import KeycloakAdmin
 
 
 @pytest.fixture

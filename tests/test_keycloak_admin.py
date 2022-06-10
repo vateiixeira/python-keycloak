@@ -1,9 +1,9 @@
 import pytest
 
-import keycloak
-from keycloak import KeycloakAdmin
-from keycloak.connection import ConnectionManager
-from keycloak.exceptions import (
+import pycloak
+from pycloak import KeycloakAdmin
+from pycloak.connection import ConnectionManager
+from pycloak.exceptions import (
     KeycloakAuthenticationError,
     KeycloakDeleteError,
     KeycloakGetError,
@@ -13,7 +13,7 @@ from keycloak.exceptions import (
 
 
 def test_keycloak_version():
-    assert keycloak.__version__, keycloak.__version__
+    assert pycloak.__version__, pycloak.__version__
 
 
 def test_keycloak_admin_bad_init(env):

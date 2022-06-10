@@ -1,4 +1,4 @@
-from keycloak import urls_patterns
+from pycloak import urls_patterns
 
 
 def test_correctness_of_patterns():
